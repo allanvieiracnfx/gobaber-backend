@@ -1,20 +1,32 @@
-import express, { request } from 'express';
-import routes from './routes';
+import 'reflect-metadata';
+import express, { Request, Response, NextFunction } from 'express';
+import 'express-async-errors';
+import routes from './routes/index';
+import './database/index';
+import uploadConfig from "./config/upload";
+import AppError from './error/AppError';
 
 const app = express();
-
 app.use(express.json());
+app.use('/files', express.static(uploadConfig.directory));
+app.use(routes);
 
-app.post('/users', (resquest, response) => {
+app.use((err: Error, request: Request, response: Response, next: NextFunction) => {
 
-  const { name, email} = resquest.body;
-
-  const user = {
-     name,
-     email,
+  if (err instanceof AppError) {
+    return response.status(err.statusCode).json({
+      status: 'error',
+      message: err.message,
+    });
   }
 
-  return response.json(user);
+  console.error(err);
+
+  return response.status(500).json({
+    status: 'error',
+    message: 'Internal server error',
+  })
+
 });
 
 
