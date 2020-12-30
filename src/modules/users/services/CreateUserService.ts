@@ -21,7 +21,7 @@ class CreateUserService {
     private hashProvider: IHashProvider
   ) { }
 
-  public async excute({ name, email, password }: Request): Promise<User> {
+  public async execute({ name, email, password }: Request): Promise<User> {
 
     const checkUserExist = await this.usersRepository.findByEmail(email);
 

@@ -8,7 +8,7 @@ export default class UsersController {
 
     const createUser = container.resolve(CreateUserService);
 
-    const user = await createUser.excute({
+    const user = await createUser.execute({
       name,
       email,
       password,

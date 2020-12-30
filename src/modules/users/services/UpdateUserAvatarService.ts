@@ -1,11 +1,8 @@
 import User from '@modules/users/infra/typeorm/entities/Users';
-import path from 'path';
-import uploadConfig from '@config/upload';
-import fs from 'fs';
 import AppError from '@shared/errors/AppError';
 import IUsersRepository from '../repositories/IUsersRepository';
 import { inject, injectable } from 'tsyringe';
-import IStorageProvider from '@shared/providers/StoregeProvider/models/IStorageProvider';
+import IStorageProvider from '@shared/container/providers/StoregeProvider/models/IStorageProvider';
 
 interface Request {
   user_id: string;

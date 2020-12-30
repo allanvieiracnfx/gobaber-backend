@@ -4,8 +4,8 @@ import multer from 'multer';
 import uploadConfig from '@config/upload';
 
 import { Router } from 'express';
-import UsersController from '../../controllers/UsersController';
-import UserAvatarController from '../../controllers/UserAvatarController';
+import UsersController from '../controllers/UsersController';
+import UserAvatarController from '../controllers/UserAvatarController';
 
 const usersRouter = Router();
 const upload = multer(uploadConfig);

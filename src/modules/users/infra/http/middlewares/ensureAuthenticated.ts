@@ -3,7 +3,7 @@ import { verify } from 'jsonwebtoken';
 import authConfig from '@config/auth';
 import AppError from '@shared/errors/AppError';
 
-interface TokenPayload{
+interface ITokenPayload{
   iat: number;
   exp: number;
   sub: string;
@@ -21,7 +21,7 @@ export default function ensureAthentica(request: Request, response: Response, ne
   try{
     const decoded = verify(token, authConfig.jwt.secret);
 
-    const { sub } = decoded as TokenPayload;
+    const { sub } = decoded as ITokenPayload;
 
     request.user = {
       id: sub,

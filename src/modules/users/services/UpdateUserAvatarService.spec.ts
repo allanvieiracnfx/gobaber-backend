@@ -5,11 +5,17 @@ import UpdateUserAvatarService from './UpdateUserAvatarService';
 
 describe('UpdateUserAvatar', () => {
 
-  it('should be able to create a new user', async () => {
-    const fakeUsersRepository = new FakeUsersRepository();
-    const fakekStoregeProvider = new FakekStoregeProvider();
-    const updateUserAvatarService = new UpdateUserAvatarService(fakeUsersRepository, fakekStoregeProvider);
+  let fakeUsersRepository: FakeUsersRepository;
+  let fakekStoregeProvider: FakekStoregeProvider;
+  let updateUserAvatarService: UpdateUserAvatarService;
 
+  beforeEach(() => {
+    fakeUsersRepository = new FakeUsersRepository();
+    fakekStoregeProvider = new FakekStoregeProvider();
+    updateUserAvatarService = new UpdateUserAvatarService(fakeUsersRepository, fakekStoregeProvider);
+  });
+
+  it('should be able to create a new user', async () => {
 
     const user = await fakeUsersRepository.create({
       name: 'Allan',
@@ -27,12 +33,8 @@ describe('UpdateUserAvatar', () => {
   });
 
   it('should be able to update avatar from non existing user', async () => {
-    const fakeUsersRepository = new FakeUsersRepository();
-    const fakekStoregeProvider = new FakekStoregeProvider();
-    const updateUserAvatarService = new UpdateUserAvatarService(fakeUsersRepository, fakekStoregeProvider);
 
-
-    expect(
+    await expect(
       updateUserAvatarService.execute({
         user_id: 'non-existing-user',
         avatarFileName: 'avatar.png'
@@ -41,13 +43,9 @@ describe('UpdateUserAvatar', () => {
   });
 
   it('should delete old avatar when updating new one', async () => {
-    const fakeUsersRepository = new FakeUsersRepository();
-    const fakekStoregeProvider = new FakekStoregeProvider();
 
-    const deleteFile = jest.spyOn(fakekStoregeProvider, 'deleteFile' );
-
+    const deleteFile = jest.spyOn(fakekStoregeProvider, 'deleteFile');
     const updateUserAvatarService = new UpdateUserAvatarService(fakeUsersRepository, fakekStoregeProvider);
-
 
     const user = await fakeUsersRepository.create({
       name: 'Allan',
