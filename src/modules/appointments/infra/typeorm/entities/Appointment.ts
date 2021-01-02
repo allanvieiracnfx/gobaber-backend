@@ -2,7 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateCol
 import User from '@modules/users/infra/typeorm/entities/Users';
 
 @Entity('appointments')
-class Appointment{
+class Appointment {
 
   @PrimaryGeneratedColumn('uuid')
   id: string
@@ -11,8 +11,15 @@ class Appointment{
   provider_id: string;
 
   @ManyToOne(() => User)
-  @JoinColumn({name: 'provider_id'})
+  @JoinColumn({ name: 'provider_id' })
   provider: User;
+
+  @Column()
+  user_id: string;
+
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 
   @Column('timestamp with time zone')
   date: Date;
