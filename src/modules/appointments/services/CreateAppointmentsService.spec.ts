@@ -1,6 +1,8 @@
+import FakeNotificationsRepository from '@modules/notifications/repositories/fake/FakeNotificationsRepository';
 import FakeHashProvider from '@modules/users/providers/HashProvider/fakes/FakeHashProvider';
 import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUsersRepository';
 import CreateUserService from '@modules/users/services/CreateUserService';
+import FakeRedisCacheProvider from '@shared/container/providers/CacheProvider/fakes/FakeRedisCacheProvider';
 import AppError from '@shared/errors/AppError';
 import FakeAppointmentsRepository from '../repositories/fakes/FakeAppointmentsRepository';
 import CreateAppointmentService from './CreateAppointementService';
@@ -12,20 +14,24 @@ describe('CreateAppointment', () => {
   let createProvider: CreateUserService;
   let fakeHashProvider: FakeHashProvider;
   let userRepository: FakeUsersRepository;
+  let fakeNotificationsRepository: FakeNotificationsRepository;
+  let fakeRedisCacheProvider: FakeRedisCacheProvider;
 
   beforeEach(() => {
     fakeAppointmentsRepository = new FakeAppointmentsRepository();
     fakeHashProvider = new FakeHashProvider();
     userRepository = new FakeUsersRepository();
+    fakeNotificationsRepository = new FakeNotificationsRepository();
+    fakeRedisCacheProvider = new FakeRedisCacheProvider();
 
-    createAppointment = new CreateAppointmentService(fakeAppointmentsRepository, userRepository)
-    createProvider = new CreateUserService(userRepository, fakeHashProvider);
+    createAppointment = new CreateAppointmentService(fakeAppointmentsRepository, userRepository, fakeNotificationsRepository,fakeRedisCacheProvider)
+    createProvider = new CreateUserService(userRepository, fakeHashProvider, fakeRedisCacheProvider);
 
   });
 
   it('should be able to create a new appointment', async () => {
 
-    const provider = await createProvider.execute({name: 'Teste', email: 'teste@teste.com.br', password: '123'});
+    const provider = await createProvider.execute({ name: 'Teste', email: 'teste@teste.com.br', password: '123' });
 
     jest.spyOn(Date, 'now').mockImplementationOnce(() => {
       return new Date(2020, 4, 10, 12).getTime();
@@ -44,7 +50,7 @@ describe('CreateAppointment', () => {
 
   it('should not be able to create two appointment on the same time', async () => {
 
-    const provider = await createProvider.execute({name: 'Teste', email: 'teste@teste.com.br', password: '123'});
+    const provider = await createProvider.execute({ name: 'Teste', email: 'teste@teste.com.br', password: '123' });
 
     jest.spyOn(Date, 'now').mockImplementationOnce(() => {
       return new Date(2020, 4, 10, 12).getTime();
@@ -69,7 +75,7 @@ describe('CreateAppointment', () => {
 
   it('should not be able to create an appointments on a past date', async () => {
 
-    const provider = await createProvider.execute({name: 'Teste', email: 'teste@teste.com.br', password: '123'});
+    const provider = await createProvider.execute({ name: 'Teste', email: 'teste@teste.com.br', password: '123' });
 
     jest.spyOn(Date, 'now').mockImplementationOnce(() => {
       return new Date(2020, 4, 10, 12).getTime();
@@ -87,7 +93,7 @@ describe('CreateAppointment', () => {
 
   it('should not be able to create an appointments with same user as provider', async () => {
 
-    const provider = await createProvider.execute({name: 'Teste', email: 'teste@teste.com.br', password: '123'});
+    const provider = await createProvider.execute({ name: 'Teste', email: 'teste@teste.com.br', password: '123' });
 
     jest.spyOn(Date, 'now').mockImplementationOnce(() => {
       return new Date(2020, 4, 10, 12).getTime();

@@ -1,3 +1,4 @@
+import FakeRedisCacheProvider from '@shared/container/providers/CacheProvider/fakes/FakeRedisCacheProvider';
 import FakeAppointmentsRepository from '../repositories/fakes/FakeAppointmentsRepository';
 import ListProviderAppointmentsService from './ListProviderAppointmentsService';
 
@@ -5,10 +6,12 @@ describe('ListProviderAppointments', () => {
 
   let fakeAppointmentsRepository: FakeAppointmentsRepository;
   let listProviderAppointmentsService: ListProviderAppointmentsService;
+  let fakeRedisCacheProvider: FakeRedisCacheProvider;
 
   beforeEach(() => {
     fakeAppointmentsRepository = new FakeAppointmentsRepository();
-    listProviderAppointmentsService = new ListProviderAppointmentsService(fakeAppointmentsRepository);
+    fakeRedisCacheProvider = new FakeRedisCacheProvider();
+    listProviderAppointmentsService = new ListProviderAppointmentsService(fakeAppointmentsRepository, fakeRedisCacheProvider);
   });
 
   it('should be able to show list the appointments on a specific from provider', async () => {
